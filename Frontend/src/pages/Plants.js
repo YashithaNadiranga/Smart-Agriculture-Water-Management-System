@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
@@ -9,27 +9,25 @@ import plusFill from '@iconify/icons-eva/plus-fill';
 import { Container, Stack, Typography, Button, Modal, Box, TextField } from '@mui/material';
 // components
 import { LoadingButton } from '@mui/lab';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import Page from '../components/Page';
-import {
-  ProductSort,
-  ProductList,
-  ProductCartWidget,
-  ProductFilterSidebar
-} from '../components/_dashboard/products';
-//
-import PRODUCTS from '../_mocks_/products';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceShop() {
-  const [openFilter, setOpenFilter] = useState(false);
-
+export default function Plant() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
 
   const { load, setLoad } = useState(false);
+  const { data, setData } = useState('[]');
 
   const ValidateSchemas = Yup.object().shape({
     pid: Yup.string().required('Plant Id is required'),
@@ -38,11 +36,19 @@ export default function EcommerceShop() {
     smois: Yup.string().required('Soil Moisture is required')
   });
 
-  function fetchdata(op) {
+  function adddata(op) {
     fetch('http://127.0.0.1:5000/plant/add/', op).then((resp) => {
       resp.json().then((result) => {
         // setExam(result);
         console.log(result);
+      });
+    });
+  }
+
+  function getData() {
+    fetch('http://127.0.0.1:5000/getplants/').then((resp) => {
+      resp.json().then((result) => {
+        
       });
     });
   }
@@ -56,8 +62,6 @@ export default function EcommerceShop() {
     },
     validationSchema: ValidateSchemas,
     onSubmit: (values) => {
-      // alert(JSON.stringify(values, null, 2));
-      // console.log(JSON.stringify(values, null, 2));
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -68,10 +72,9 @@ export default function EcommerceShop() {
         body: JSON.stringify(values)
       };
 
-      fetchdata(requestOptions);
-
+      adddata(requestOptions);
+      getData();
       navigate('/dashboard/app');
-      fetchdata();
       setOpen(false);
       setLoad(false);
     }
@@ -92,6 +95,24 @@ export default function EcommerceShop() {
     borderRadius: '10px'
     // overflow: 'scroll'
   };
+
+  function createData(name, calories, fat, carbs, protein) {
+    console.log({ name, calories, fat, carbs, protein });
+    return { name, calories, fat, carbs, protein };
+  }
+
+  const rows = [
+    // { name: 'gdsg', calories: 'sdg', fat: 'dfgds', carbs: 'bb', protein: 'ghfdhd' },
+    // createData('Frozen yoghurt', 159, 6.0, 24, 4.0)
+    // // createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+    // // createData('Eclair', 262, 16.0, 24, 6.0),
+    // // createData('Cupcake', 305, 3.7, 67, 4.3),
+    // // createData('Gingerbread', 356, 16.0, 49, 3.9)
+  ];
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <Page title="Dashboard: Plants | WMS">
@@ -189,27 +210,32 @@ export default function EcommerceShop() {
           </Box>
         </Modal>
 
-        {/* <Stack
-          direction="row"
-          flexWrap="wrap-reverse"
-          alignItems="center"
-          justifyContent="flex-end"
-          sx={{ mb: 5 }}
-        >
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <ProductFilterSidebar
-              formik={formik}
-              isOpenFilter={openFilter}
-              onResetFilter={handleResetFilter}
-              onOpenFilter={handleOpenFilter}
-              onCloseFilter={handleCloseFilter}
-            />
-            <ProductSort />
-          </Stack>
-        </Stack>
-
-        <ProductList products={PRODUCTS} />
-        <ProductCartWidget /> */}
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Plant Id</TableCell>
+                <TableCell>Plant Name</TableCell>
+                <TableCell align="right">Soil Type</TableCell>
+                <TableCell align="right">Soil Moistrue</TableCell>
+                <TableCell align="right">Water to be added</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {result.map((row) => (
+                <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell align="left">{row.calories}</TableCell>
+                  <TableCell component="th" scope="row">
+                    {row.name}
+                  </TableCell>
+                  <TableCell align="right">{row.calories}</TableCell>
+                  <TableCell align="right">{row.fat}</TableCell>
+                  <TableCell align="right">{row.fat}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Container>
     </Page>
   );
