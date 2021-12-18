@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 from flask import jsonify,make_response
 from flask_cors import CORS,cross_origin
-import json
 from flask_marshmallow import Marshmallow
 
 application = Flask(__name__)
@@ -61,6 +60,54 @@ def plant_add():
         return make_response(jsonify(success= "success"), 200)
     else:
         return make_response(jsonify(""), 200)
+
+@application.route("/plant/update/",  methods=["GET","PUT"])
+@cross_origin()
+def plant_update():
+    if request.method =='PUT':
+        pid = request.json.get('pid')
+        pname = request.json.get('pname')
+        stype = request.json.get('stype')
+        smois = request.json.get('smois')
+
+        plant_n = Plant.query.filter_by(pid=pid).first()
+        plant_n.pname = pname
+        plant_n.stype = stype
+        plant_n.smois = smois
+        db.session.commit()
+        return make_response(jsonify(success= "success"), 200)
+    else:
+        return make_response(jsonify(""), 200)
+
+@application.route("/plant/delete/",  methods=["GET","DELETE"])
+@cross_origin()
+def plant_delete():
+    if request.method =='DELETE':
+        pid = request.args.get('pid')
+        Plant.query.filter(Plant.pid == pid).delete()
+        db.session.commit() 
+        print(pid)
+        return make_response(jsonify(success= "success"), 200)
+    else:
+        return make_response(jsonify(""), 200)
+
+@application.route("/dashboard/getallcount/",  methods=["GET"])
+@cross_origin()
+def get_dashboard():
+    cou = db.session.query(Plant.pid).count()
+    return make_response(jsonify(plantcount= cou), 200)
+
+@application.route("/plant/getlastid/",  methods=["GET"])
+@cross_origin()
+def get_lastid():
+    ls = Plant.query.order_by(Plant.pid.desc()).first()
+    cou = 0
+    if ls == None :
+        cou = 0
+    else:
+        cou = ls.pid
+    return jsonify({'lastid' : int(cou)+1})
+    
 
 if __name__ == '__main__':
     application.run(debug=True)

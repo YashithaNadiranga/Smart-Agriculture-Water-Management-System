@@ -6,28 +6,70 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 // material
-import { Container, Stack, Typography, Button, Modal, Box, TextField } from '@mui/material';
+import {
+  Card,
+  Table,
+  Stack,
+  Avatar,
+  Button,
+  Checkbox,
+  TableRow,
+  TableBody,
+  TableCell,
+  Container,
+  Typography,
+  TableContainer,
+  TablePagination,
+  Modal,
+  Box,
+  TextField,
+  TableHead
+} from '@mui/material';
 // components
 import { LoadingButton } from '@mui/lab';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import axios from '../axios/axios';
 import Page from '../components/Page';
+import Scrollbar from '../components/Scrollbar';
 
 // ----------------------------------------------------------------------
 
 export default function Plant() {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [editData, setEditData] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    // clearformik();
+    setOpen(false);
+    if (editData) {
+      setEditData(false);
+      formik.values.pid = '';
+      formik.values.pname = '';
+      formik.values.stype = '';
+      formik.values.smois = '';
+    }
+  };
+
+  const clearformikdata = () => {
+    formik.values.pid = '';
+    formik.values.pname = '';
+    formik.values.stype = '';
+    formik.values.smois = '';
+  };
+
+  const clearformikerror = () => {
+    formik.errors.pid = false;
+    formik.errors.pname = false;
+    formik.errors.stype = false;
+    formik.errors.smois = false;
+  };
+
   const navigate = useNavigate();
 
-  const { load, setLoad } = useState(false);
-  const { data, setData } = useState('[]');
+  const [load, setLoad] = useState(false);
+  const [data, setData] = useState([]);
 
   const ValidateSchemas = Yup.object().shape({
     pid: Yup.string().required('Plant Id is required'),
@@ -36,20 +78,22 @@ export default function Plant() {
     smois: Yup.string().required('Soil Moisture is required')
   });
 
-  function adddata(op) {
-    fetch('http://127.0.0.1:5000/plant/add/', op).then((resp) => {
-      resp.json().then((result) => {
-        // setExam(result);
-        console.log(result);
-      });
+  function addData(dt) {
+    // eslint-disable-next-line arrow-body-style
+    axios.post('/plant/add/', dt).then((res) => {
+      if (res.data.success === 'success') {
+        getData();
+        setOpen(false);
+        setLoad(false);
+        clearformikdata();
+      }
     });
   }
 
   function getData() {
-    fetch('http://127.0.0.1:5000/getplants/').then((resp) => {
-      resp.json().then((result) => {
-        
-      });
+    axios.get('/getplants/').then((res) => {
+      setData(res.data.Plant);
+      // console.log(res.data);
     });
   }
 
@@ -62,21 +106,7 @@ export default function Plant() {
     },
     validationSchema: ValidateSchemas,
     onSubmit: (values) => {
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer my-token',
-          'My-Custom-Header': 'foobar'
-        },
-        body: JSON.stringify(values)
-      };
-
-      adddata(requestOptions);
-      getData();
-      navigate('/dashboard/app');
-      setOpen(false);
-      setLoad(false);
+      addData(values);
     }
   });
 
@@ -93,26 +123,27 @@ export default function Plant() {
     boxShadow: 24,
     p: 4,
     borderRadius: '10px'
-    // overflow: 'scroll'
   };
-
-  function createData(name, calories, fat, carbs, protein) {
-    console.log({ name, calories, fat, carbs, protein });
-    return { name, calories, fat, carbs, protein };
-  }
-
-  const rows = [
-    // { name: 'gdsg', calories: 'sdg', fat: 'dfgds', carbs: 'bb', protein: 'ghfdhd' },
-    // createData('Frozen yoghurt', 159, 6.0, 24, 4.0)
-    // // createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    // // createData('Eclair', 262, 16.0, 24, 6.0),
-    // // createData('Cupcake', 305, 3.7, 67, 4.3),
-    // // createData('Gingerbread', 356, 16.0, 49, 3.9)
-  ];
 
   useEffect(() => {
     getData();
   }, []);
+
+  const onEditTable = (data) => {
+    setEditData(true);
+    setOpen(!open);
+    formik.values.pid = data.pid;
+    formik.values.pname = data.pname;
+    formik.values.stype = data.stype;
+    formik.values.smois = data.smois;
+  };
+
+  const onEditData = () => {
+    console.log(formik.values.pid);
+    console.log(formik.values.pname);
+    console.log(formik.values.stype);
+    console.log(formik.values.smois);
+  };
 
   return (
     <Page title="Dashboard: Plants | WMS">
@@ -191,17 +222,31 @@ export default function Plant() {
                   helperText={touched.smois && errors.smois}
                 />
 
-                <LoadingButton
-                  sx={{ mt: 3, alignItems: 'center' }}
-                  variant="contained"
-                  type="submit"
-                  // component={RouterLink}
-                  startIcon={<Icon icon={plusFill} />}
-                  loading={load}
-                  // onClick={handleOpen}
-                >
-                  Add New Plant
-                </LoadingButton>
+                {!editData ? (
+                  <LoadingButton
+                    sx={{ mt: 3, alignItems: 'center' }}
+                    variant="contained"
+                    type="submit"
+                    // component={RouterLink}
+                    startIcon={<Icon icon={plusFill} />}
+                    loading={load}
+                    // onClick={handleOpen}
+                  >
+                    Add New Plant
+                  </LoadingButton>
+                ) : (
+                  <LoadingButton
+                    sx={{ mt: 3, alignItems: 'center' }}
+                    variant="contained"
+                    type="button"
+                    // component={RouterLink}
+                    startIcon={<Icon icon={plusFill} />}
+                    loading={load}
+                    onClick={onEditData}
+                  >
+                    Edit Plant
+                  </LoadingButton>
+                )}
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                   {/* Tempory Disabled */}
                 </Typography>
@@ -219,18 +264,22 @@ export default function Plant() {
                 <TableCell align="right">Soil Type</TableCell>
                 <TableCell align="right">Soil Moistrue</TableCell>
                 <TableCell align="right">Water to be added</TableCell>
+                <TableCell align="right"> </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {result.map((row) => (
-                <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell align="left">{row.calories}</TableCell>
+              {data.map((row) => (
+                <TableRow key={row.pid} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell align="left">{row.pid}</TableCell>
                   <TableCell component="th" scope="row">
-                    {row.name}
+                    {row.pname}
                   </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
+                  <TableCell align="right">{row.stype}</TableCell>
+                  <TableCell align="right">{row.smois}</TableCell>
+                  <TableCell align="right">{row.smois}</TableCell>
+                  <TableCell align="right" onClick={() => onEditTable(row)}>
+                    Edit
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
