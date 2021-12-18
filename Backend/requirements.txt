@@ -1,0 +1,9 @@
+Flask
+SQLAlchemy
+Flask
+Flask-SQLAlchemy
+pymysql 
+boto3
+flask-cors
+flask_marshmallow
+marshmallow-sqlalchemy
