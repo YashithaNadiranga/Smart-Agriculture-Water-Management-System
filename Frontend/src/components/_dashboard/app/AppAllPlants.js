@@ -36,13 +36,13 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 const TOTAL = 0;
 
-export default function AppAllPlants() {
+export default function AppAllPlants(data) {
   return (
     <RootStyle>
       <IconWrapperStyle>
         <Icon icon="ri:plant-fill" color="green" width={24} height={24} />
       </IconWrapperStyle>
-      <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+      <Typography variant="h3">{data.data}</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         All Plants
       </Typography>

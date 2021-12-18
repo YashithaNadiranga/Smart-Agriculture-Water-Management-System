@@ -1,8 +1,9 @@
 // material
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import axios from '../axios/axios';
 // components
 import Page from '../components/Page';
 import {
@@ -25,8 +26,10 @@ import {
 export default function DashboardApp() {
   const cookies = new Cookies();
   const navigate = useNavigate();
+  const [data, setData] = useState('0');
 
   useEffect(() => {
+    getData();
     if (cookies.get('username') === undefined) {
       navigate('/login');
     } else {
@@ -34,12 +37,9 @@ export default function DashboardApp() {
     }
   }, []);
 
-  function fetchdata() {
-    fetch('http://localhost:5000/plant/').then((resp) => {
-      resp.json().then((result) => {
-        // setExam(result);
-        console.log(result);
-      });
+  function getData() {
+    axios.get('/dashboard/getallcount/').then((res) => {
+      setData(res.data.plantcount);
     });
   }
 
@@ -51,7 +51,7 @@ export default function DashboardApp() {
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppAllPlants />
+            <AppAllPlants data={data} />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppAllSoils />
