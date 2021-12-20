@@ -25,7 +25,6 @@ import {
   TextField,
   TableHead,
   IconButton
-  TableHead
 } from '@mui/material';
 // components
 import { LoadingButton } from '@mui/lab';
@@ -49,7 +48,6 @@ export default function Plant() {
     if (editData) {
       setEditData(false);
       getlastId();
-      formik.values.pid = '';
       formik.values.pname = '';
       formik.values.stype = '';
       formik.values.smois = '';
@@ -58,7 +56,6 @@ export default function Plant() {
 
   const clearformikdata = () => {
     getlastId();
-    formik.values.pid = '';
     formik.values.pname = '';
     formik.values.stype = '';
     formik.values.smois = '';
@@ -89,7 +86,6 @@ export default function Plant() {
       if (res.data.success === 'success') {
         getData();
         setOpen(false);
-        setLoad(false);
         clearformikdata();
       }
     });
@@ -140,8 +136,7 @@ export default function Plant() {
     },
     validationSchema: ValidateSchemas,
     onSubmit: (values) => {
-      console.log(values);
-      // addData(values);
+      // console.log(values);
       addData(values);
     }
   });
@@ -173,13 +168,6 @@ export default function Plant() {
     formik.values.pname = data.pname;
     formik.values.stype = data.stype;
     formik.values.smois = data.smois;
-  };
-
-  const onEditData = () => {
-    console.log(formik.values.pid);
-    console.log(formik.values.pname);
-    console.log(formik.values.stype);
-    console.log(formik.values.smois);
   };
 
   return (
@@ -299,17 +287,6 @@ export default function Plant() {
                       Delete
                     </LoadingButton>
                   </>
-                  <LoadingButton
-                    sx={{ mt: 3, alignItems: 'center' }}
-                    variant="contained"
-                    type="button"
-                    // component={RouterLink}
-                    startIcon={<Icon icon={plusFill} />}
-                    loading={load}
-                    onClick={onEditData}
-                  >
-                    Edit Plant
-                  </LoadingButton>
                 )}
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                   {/* Tempory Disabled */}
@@ -346,7 +323,6 @@ export default function Plant() {
                       <Icon icon="akar-icons:edit" color="green" width="24" height="24" />
                     </IconButton>
                     {/* <Icon icon="akar-icons:edit" color="green" width="24" height="24" /> */}
-                    Edit
                   </TableCell>
                 </TableRow>
               ))}
