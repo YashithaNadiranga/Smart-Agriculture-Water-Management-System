@@ -61,7 +61,7 @@ export default function DashboardApp() {
   function getWeatherData() {
     axios
       .get(
-        'https://api.openweathermap.org/data/2.5/weather?lat=6.75511453189087&lon=80.05017596178016&appid=1cc5ca389e8489194b21dc857f906e89'
+        'https://api.openweathermap.org/data/2.5/weather?lat=6.75511453189087&lon=80.05017596178016&' //appid=1cc5ca389e8489194b21dc857f906e89
       )
       .then((res) => {
         setWdata(res.data);
@@ -130,93 +130,73 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <div style={{ border: 'solid 2px green', borderRadius: '5px', alignItems: 'center' }}>
-              <iframe
-                style={{
-                  border: 'none'
-                }}
-                title="myFrame"
-                width="100%"
-                height="260"
-                src="https://thingspeak.com/channels/1628835/widgets/406773"
-              >
-                Frame
-              </iframe>
-            </div>
+            <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
+              <CardActionArea>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <iframe
+                    style={{
+                      border: 'none'
+                    }}
+                    title="myFrame"
+                    width="100%"
+                    height="260"
+                    src="https://thingspeak.com/channels/1628835/widgets/406773"
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <div style={{ border: 'solid 2px green', borderRadius: '5px', alignItems: 'center' }}>
-              <iframe
-                style={{
-                  border: 'none'
-                }}
-                title="myFrame"
-                width="100%"
-                height="260"
-                src="https://thingspeak.com/channels/1628835/widgets/406775"
-              >
-                Frame
-              </iframe>
-            </div>
+            <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
+              <CardActionArea>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <iframe
+                    style={{
+                      border: 'none'
+                    }}
+                    title="myFrame"
+                    width="100%"
+                    height="260"
+                    src="https://thingspeak.com/channels/1628835/widgets/406775"
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <div style={{ border: 'solid 2px green', borderRadius: '5px', alignItems: 'center' }}>
-              <iframe
-                style={{
-                  border: 'none'
-                }}
-                title="myFrame"
-                width="100%"
-                height="260"
-                src="https://thingspeak.com/channels/1628835/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Soil Moisture&type=line&width=560"
-              >
-                Frame
-              </iframe>
-            </div>
+            <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
+              <CardActionArea>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <iframe
+                    style={{
+                      border: 'none'
+                    }}
+                    title="myFrame"
+                    width="100%"
+                    height="260"
+                    src="https://thingspeak.com/channels/1628835/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Soil Moisture&type=line&width=560"
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <div style={{ border: 'solid 2px green', borderRadius: '5px' }}>
-              <iframe
-                style={{ border: 'none' }}
-                title="myFrame"
-                width="100%"
-                height="260"
-                src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15&title=Soil Moisture&type=line&width=560"
-              >
-                Frame
-              </iframe>
-            </div>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={6}>
-            <div style={{ border: 'solid 2px green', borderRadius: '5px' }}>
-              <iframe
-                style={{ border: 'none', alignItems: 'center' }}
-                title="myFrame"
-                width="100%"
-                height="260"
-                src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"
-              >
-                Frame
-              </iframe>
-            </div>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={6}>
-            <div style={{ border: 'solid 2px green', borderRadius: '5px' }}>
-              <iframe
-                style={{ border: 'none' }}
-                title="myFrame"
-                width="100%"
-                height="260"
-                src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"
-              >
-                Frame
-              </iframe>
-            </div>
+            <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
+              <CardActionArea>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <iframe
+                    style={{ border: 'none' }}
+                    title="myFrame"
+                    width="100%"
+                    height="260"
+                    src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15&title=Motor Status&type=line&width=560"
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
           </Grid>
 
           {/* <Grid item xs={12} md={6} lg={8}>
