@@ -133,6 +133,7 @@ export default function DashboardApp() {
             <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
               <CardActionArea>
                 <CardContent sx={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '16px' }}>Soil Moisture Meter</p>
                   <iframe
                     style={{
                       border: 'none'
@@ -151,6 +152,7 @@ export default function DashboardApp() {
             <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
               <CardActionArea>
                 <CardContent sx={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '16px' }}>Soil Moisture Digital Meter</p>
                   <iframe
                     style={{
                       border: 'none'
@@ -187,12 +189,13 @@ export default function DashboardApp() {
             <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
               <CardActionArea>
                 <CardContent sx={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '16px' }}>Motor Status</p>
                   <iframe
                     style={{ border: 'none' }}
                     title="myFrame"
                     width="100%"
                     height="260"
-                    src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15&title=Motor Status&type=line&width=560"
+                    src="https://thingspeak.com/channels/1628835/widgets/406788&title=Motor State&width=560"
                   />
                 </CardContent>
               </CardActionArea>
