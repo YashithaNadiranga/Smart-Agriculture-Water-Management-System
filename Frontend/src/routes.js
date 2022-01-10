@@ -8,7 +8,7 @@ import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Plants from './pages/Plants';
 import Soil from './pages/soil';
-import User from './pages/User';
+import User from './pages/User copy';
 import NotFound from './pages/Page404';
 
 // ----------------------------------------------------------------------

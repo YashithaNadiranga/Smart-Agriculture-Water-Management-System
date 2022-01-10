@@ -26,12 +26,38 @@ import {
   TableHead,
   IconButton
 } from '@mui/material';
+import { tableCellClasses } from '@mui/material/TableCell';
+import CircularProgress from '@mui/material/CircularProgress';
+
+// after
+import { styled } from '@mui/material/styles';
+
 // components
 import { LoadingButton } from '@mui/lab';
 import Paper from '@mui/material/Paper';
 import axios from '../axios/axios';
 import Page from '../components/Page';
 import Scrollbar from '../components/Scrollbar';
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#00AB55',
+    color: theme.palette.common.white
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14
+  }
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0
+  }
+}));
 
 // ----------------------------------------------------------------------
 
@@ -72,6 +98,7 @@ export default function Plant() {
 
   const [load, setLoad] = useState(false);
   const [data, setData] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false);
 
   const ValidateSchemas = Yup.object().shape({
     pid: Yup.string().required('Plant Id is required'),
@@ -296,7 +323,7 @@ export default function Plant() {
           </Box>
         </Modal>
 
-        <TableContainer component={Paper}>
+        {/* <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
@@ -322,9 +349,41 @@ export default function Plant() {
                     <IconButton color="secondary" aria-label="add an alarm">
                       <Icon icon="akar-icons:edit" color="green" width="24" height="24" />
                     </IconButton>
-                    {/* <Icon icon="akar-icons:edit" color="green" width="24" height="24" /> */}
                   </TableCell>
                 </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer> */}
+
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Plant Id</StyledTableCell>
+                <StyledTableCell align="left">Plant Name</StyledTableCell>
+                <StyledTableCell align="right">Soil Type</StyledTableCell>
+                <StyledTableCell align="right">Soil Moistrue</StyledTableCell>
+                <StyledTableCell align="right">Water to be added</StyledTableCell>
+                <StyledTableCell align="right"> </StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((row) => (
+                <StyledTableRow key={row.pid}>
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.pid}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">{row.pname}</StyledTableCell>
+                  <StyledTableCell align="right">{row.stype}</StyledTableCell>
+                  <StyledTableCell align="right">{row.smois}</StyledTableCell>
+                  <StyledTableCell align="right">{row.smois}</StyledTableCell>
+                  <StyledTableCell align="right" onClick={() => onEditTable(row)}>
+                    <IconButton color="secondary" aria-label="add an alarm">
+                      <Icon icon="akar-icons:edit" color="green" width="24" height="24" />
+                    </IconButton>
+                  </StyledTableCell>
+                </StyledTableRow>
               ))}
             </TableBody>
           </Table>

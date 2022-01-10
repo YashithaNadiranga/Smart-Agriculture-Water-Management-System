@@ -1,9 +1,14 @@
 // material
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, Container, Typography } from '@mui/material';
+import { Box, Grid, Container, Typography, CardActionArea } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import WeatherCard from '../components/weather/card';
 import axios from '../axios/axios';
+
 // components
 import Page from '../components/Page';
 import {
@@ -27,9 +32,19 @@ export default function DashboardApp() {
   const cookies = new Cookies();
   const navigate = useNavigate();
   const [data, setData] = useState('0');
+  const [wdata, setWdata] = useState({
+    name: 'NaN',
+    main: [{ temp: '0' }],
+    weather: [{ main: 'NaN' }]
+  });
+  const [dateState, setDateState] = useState(new Date());
 
   useEffect(() => {
     getData();
+    getWeatherData();
+    setInterval(() => {
+      setDateState(new Date());
+    }, 1000);
     if (cookies.get('username') === undefined) {
       navigate('/login');
     } else {
@@ -43,12 +58,60 @@ export default function DashboardApp() {
     });
   }
 
+  function getWeatherData() {
+    axios
+      .get(
+        'https://api.openweathermap.org/data/2.5/weather?lat=6.75511453189087&lon=80.05017596178016&appid=1cc5ca389e8489194b21dc857f906e89'
+      )
+      .then((res) => {
+        setWdata(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const sty = {
+    paddingLeft: 20
+  };
+
   return (
     <Page title="Dashboard | WMS">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
           <Typography variant="h4">Hi, Welcome back</Typography>
         </Box>
+
+        <Grid container spacing={3} sx={{ mb: 5 }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <WeatherCard
+              name="Date & Time"
+              data={new Date().toLocaleString()}
+              iconn="ic:baseline-access-time"
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <WeatherCard name="Location" data={wdata.name} iconn="akar-icons:location" />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <WeatherCard
+              name="Weather"
+              data={wdata.weather[0].main}
+              iconn="fluent:weather-hail-day-48-regular"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <WeatherCard
+              name="Temp"
+              data={`${(Math.round(wdata.main.temp - 273.15) * 100) / 100} °C`}
+              iconn="raphael:temp"
+            />
+          </Grid>
+        </Grid>
+
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <AppAllPlants data={data} />
@@ -61,6 +124,99 @@ export default function DashboardApp() {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AppWaterLevel />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} sx={{ mb: 3 }}>
+            DATA
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <div style={{ border: 'solid 2px green', borderRadius: '5px', alignItems: 'center' }}>
+              <iframe
+                style={{
+                  border: 'none'
+                }}
+                title="myFrame"
+                width="100%"
+                height="260"
+                src="https://thingspeak.com/channels/1628835/widgets/406773"
+              >
+                Frame
+              </iframe>
+            </div>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <div style={{ border: 'solid 2px green', borderRadius: '5px', alignItems: 'center' }}>
+              <iframe
+                style={{
+                  border: 'none'
+                }}
+                title="myFrame"
+                width="100%"
+                height="260"
+                src="https://thingspeak.com/channels/1628835/widgets/406775"
+              >
+                Frame
+              </iframe>
+            </div>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <div style={{ border: 'solid 2px green', borderRadius: '5px', alignItems: 'center' }}>
+              <iframe
+                style={{
+                  border: 'none'
+                }}
+                title="myFrame"
+                width="100%"
+                height="260"
+                src="https://thingspeak.com/channels/1628835/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Soil Moisture&type=line&width=560"
+              >
+                Frame
+              </iframe>
+            </div>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <div style={{ border: 'solid 2px green', borderRadius: '5px' }}>
+              <iframe
+                style={{ border: 'none' }}
+                title="myFrame"
+                width="100%"
+                height="260"
+                src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15&title=Soil Moisture&type=line&width=560"
+              >
+                Frame
+              </iframe>
+            </div>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <div style={{ border: 'solid 2px green', borderRadius: '5px' }}>
+              <iframe
+                style={{ border: 'none', alignItems: 'center' }}
+                title="myFrame"
+                width="100%"
+                height="260"
+                src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"
+              >
+                Frame
+              </iframe>
+            </div>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <div style={{ border: 'solid 2px green', borderRadius: '5px' }}>
+              <iframe
+                style={{ border: 'none' }}
+                title="myFrame"
+                width="100%"
+                height="260"
+                src="https://thingspeak.com/channels/1628835/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"
+              >
+                Frame
+              </iframe>
+            </div>
           </Grid>
 
           {/* <Grid item xs={12} md={6} lg={8}>
