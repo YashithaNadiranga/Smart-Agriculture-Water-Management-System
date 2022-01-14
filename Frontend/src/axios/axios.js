@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  // baseURL: 'http://watermanagementsystem-env.eba-pthqxpm2.us-east-2.elasticbeanstalk.com/'
-  baseURL: 'http://watermanagementsystem-env.eba-pthqxpm2.us-east-2.elasticbeanstalk.com/'
+  baseURL: 'http://127.0.0.1:5000/'
 });
 
 export default instance;

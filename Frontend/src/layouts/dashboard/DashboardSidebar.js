@@ -53,7 +53,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     fetch('https://api.thingspeak.com/channels/1631910/fields/1.json?results=1/').then((resp) => {
       resp.json().then((result) => {
         const datas = result.feeds[0].field1;
-        console.log(typeof datas);
         if (datas === '1') {
           setChecked(true);
         } else {
@@ -101,7 +100,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     notify();
     setTimeout(() => {
       setdis(false);
-      console.log('time');
     }, 15000);
   };
 
@@ -171,6 +169,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           <Box sx={{ textAlign: 'center' }}>
             <Typography gutterBottom variant="h6">
               Supply Water?
+            </Typography>
+            <Typography gutterBottom variant="p">
+              MOTOR {checked ? 'ON' : 'OFF'}
             </Typography>
           </Box>
 

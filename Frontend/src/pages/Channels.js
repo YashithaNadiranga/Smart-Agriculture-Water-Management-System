@@ -142,7 +142,7 @@ export default function Blog() {
             <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
               <CardActionArea>
                 <CardContent sx={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '16px' }}>MatLab Plot</p>
+                  <p style={{ fontSize: '16px' }}>Motor Status</p>
                   <iframe
                     style={{
                       border: 'none'
@@ -150,7 +150,72 @@ export default function Blog() {
                     title="myFrame"
                     width="100%"
                     height="260"
-                    src="https://thingspeak.com/apps/matlab_visualizations/443321?size=iframe"
+                    src="https://thingspeak.com/channels/1631910/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=&type=line&width=500"
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
+              <CardActionArea>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '16px' }}>MATLAB Visualizations</p>
+                  <p style={{ fontSize: '11px' }}>
+                    Visualize correlation between temperature and humidity
+                  </p>
+
+                  <iframe
+                    style={{
+                      border: 'none'
+                    }}
+                    title="myFrame"
+                    width="100%"
+                    height="260"
+                    src="https://thingspeak.com/apps/matlab_visualizations/443703"
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
+              <CardActionArea>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '16px' }}>MATLAB Plot Output</p>
+                  <p style={{ fontSize: '11px' }}>Histogram of Temperature Variation</p>
+
+                  <iframe
+                    style={{
+                      border: 'none'
+                    }}
+                    title="myFrame"
+                    width="100%"
+                    height="260"
+                    src="https://thingspeak.com/apps/matlab_visualizations/443704"
+                  />
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={6}>
+            <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
+              <CardActionArea>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '16px' }}>MATLAB Visualizations</p>
+                  <p style={{ fontSize: '11px' }}>MATLAB Plot Output</p>
+
+                  <iframe
+                    style={{
+                      border: 'none'
+                    }}
+                    title="myFrame"
+                    width="100%"
+                    height="260"
+                    src="https://thingspeak.com/apps/matlab_visualizations/443705"
                   />
                 </CardContent>
               </CardActionArea>

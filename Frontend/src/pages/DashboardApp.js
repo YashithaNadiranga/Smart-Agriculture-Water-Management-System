@@ -61,7 +61,7 @@ export default function DashboardApp() {
   function getWeatherData() {
     axios
       .get(
-        'https://api.openweathermap.org/data/2.5/weather?lat=6.75511453189087&lon=80.05017596178016&appid='
+        'https://api.openweathermap.org/data/2.5/weather?lat=6.75511453189087&lon=80.05017596178016&appid=' //1cc5ca389e8489194b21dc857f906e89
       )
       .then((res) => {
         setWdata(res.data);

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import plusFill from '@iconify/icons-eva/plus-fill';
+import { ToastContainer, toast } from 'react-toastify';
 // material
 import {
   Card,
@@ -27,6 +28,10 @@ import {
   IconButton
 } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import CircularProgress from '@mui/material/CircularProgress';
 
 // after
@@ -65,6 +70,9 @@ export default function Plant() {
   const [open, setOpen] = React.useState(false);
   const [editData, setEditData] = React.useState(false);
   const [lastid, setLastId] = useState(0);
+  const [age, setAge] = React.useState('');
+  const [tomois, settomois] = useState(null);
+  const [cal, setcal] = useState(null);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -77,6 +85,7 @@ export default function Plant() {
       formik.values.pname = '';
       formik.values.stype = '';
       formik.values.smois = '';
+      formik.values.channel = '';
     }
   };
 
@@ -85,6 +94,7 @@ export default function Plant() {
     formik.values.pname = '';
     formik.values.stype = '';
     formik.values.smois = '';
+    formik.values.channel = '';
   };
 
   const clearformikerror = () => {
@@ -92,6 +102,11 @@ export default function Plant() {
     formik.errors.pname = false;
     formik.errors.stype = false;
     formik.errors.smois = false;
+    formik.values.channel = false;
+  };
+
+  const handleChanged = (event) => {
+    setAge(event.target.value);
   };
 
   const navigate = useNavigate();
@@ -104,7 +119,8 @@ export default function Plant() {
     pid: Yup.string().required('Plant Id is required'),
     pname: Yup.string().required('Plant name is required'),
     stype: Yup.string().required('Soil Type is required'),
-    smois: Yup.string().required('Soil Moisture is required')
+    smois: Yup.string().required('Recommended water intake is required'),
+    channel: Yup.string().required('Channel is required')
   });
 
   function addData(dt) {
@@ -119,10 +135,72 @@ export default function Plant() {
   }
 
   function getData() {
-    axios.get('/getplants/').then((res) => {
-      setData(res.data.Plant);
-      // console.log(res.data);
-    });
+    try {
+      axios.get('/getplants/').then((res) => {
+        setData(res.data.Plant);
+        if (res && res.data) {
+          const obj = [0];
+          // eslint-disable-next-line-array-callback-return
+          res.data.Plant.map((item) => {
+            const temp = { id: item.channel, val: 0 };
+            obj.push(temp);
+          });
+          settomois(obj);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function fetchmotorval(val) {
+    try {
+      fetch(`https://api.thingspeak.com/channels/${val.channel}/fields/1.json?results=1/`).then(
+        (resp) => {
+          resp.json().then((result) => {
+            const datas = result && result.feeds && result.feeds[0].field1;
+            const tempArray = [...tomois];
+            tomois?.map((item, index) => {
+              if (item.id === val.channel) {
+                tempArray[index] = { id: val.channel, val: datas };
+              }
+            });
+            settomois(tempArray);
+
+            // settomois(datas);
+            // if (datas === '1') {
+            //   setChecked(true);
+            // } else {
+            //   setChecked(false);
+            // }
+          });
+        }
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function calculation(val) {
+    {
+      tomois?.map((item, index) => {
+        if (item.id === val.channel) {
+          console.log(item.val);
+          // console.log(val.smois - item.val);
+          // setcal(val.smois - item.val);
+          toast.info(`Water To be Added - ${val.smois - item.val} %`, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined
+          });
+        }
+      });
+    }
+    console.log(val);
   }
 
   const deletedata = () => {
@@ -159,7 +237,8 @@ export default function Plant() {
       pid: '',
       pname: '',
       stype: '',
-      smois: ''
+      smois: '',
+      channel: ''
     },
     validationSchema: ValidateSchemas,
     onSubmit: (values) => {
@@ -195,6 +274,7 @@ export default function Plant() {
     formik.values.pname = data.pname;
     formik.values.stype = data.stype;
     formik.values.smois = data.smois;
+    formik.values.channel = data.channel;
   };
 
   return (
@@ -232,7 +312,7 @@ export default function Plant() {
                   id="pid"
                   label="Plant ID"
                   variant="outlined"
-                  sx={{ mt: 3, width: '100%' }}
+                  sx={{ mt: 3, width: '20%' }}
                   onChange={formik.handleChange}
                   value={formik.values.pid}
                   {...getFieldProps('pid')}
@@ -243,7 +323,7 @@ export default function Plant() {
                   id="pname"
                   label="Plant Name"
                   variant="outlined"
-                  sx={{ mt: 3, width: '100%' }}
+                  sx={{ mt: 3, width: '75%', ml: 3 }}
                   onChange={formik.handleChange}
                   value={formik.values.pname}
                   {...getFieldProps('pname')}
@@ -251,7 +331,7 @@ export default function Plant() {
                   helperText={touched.pname && errors.pname}
                 />
 
-                <TextField
+                {/* <TextField
                   id="stype"
                   label="Soil Type"
                   variant="outlined"
@@ -261,19 +341,49 @@ export default function Plant() {
                   {...getFieldProps('stype')}
                   error={Boolean(touched.stype && errors.stype)}
                   helperText={touched.stype && errors.stype}
-                />
+                /> */}
+
+                <FormControl fullWidth sx={{ mt: 4 }}>
+                  <InputLabel id="stype">Soil Type</InputLabel>
+                  <Select
+                    id="stype"
+                    value={formik.values.stype}
+                    label="Soil Type"
+                    onChange={formik.handleChange}
+                    {...getFieldProps('stype')}
+                    error={Boolean(touched.stype && errors.stype)}
+                    helperText={touched.stype && errors.stype}
+                  >
+                    <MenuItem value="Normal">Normal</MenuItem>
+                    <MenuItem value="Paddy">Paddy</MenuItem>
+                  </Select>
+                </FormControl>
 
                 <TextField
                   id="smois"
-                  label="Soil Moisture"
+                  label="Recommended Water Intake"
                   variant="outlined"
-                  sx={{ mt: 3, width: '100%' }}
+                  sx={{ mt: 3, width: '47%' }}
                   onChange={formik.handleChange}
                   value={formik.values.smois}
                   {...getFieldProps('smois')}
                   error={Boolean(touched.smois && errors.smois)}
                   helperText={touched.smois && errors.smois}
                 />
+
+                <TextField
+                  id="channel"
+                  label="Channel Id"
+                  variant="outlined"
+                  sx={{ mt: 3, width: '47%', ml: 4 }}
+                  onChange={formik.handleChange}
+                  value={formik.values.channel}
+                  {...getFieldProps('channel')}
+                  error={Boolean(touched.channel && errors.channel)}
+                  helperText={touched.channel && errors.channel}
+                />
+
+                <div sx={{ width: '50%' }}> </div>
 
                 {!editData ? (
                   <LoadingButton
@@ -323,39 +433,6 @@ export default function Plant() {
           </Box>
         </Modal>
 
-        {/* <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">Plant Id</TableCell>
-                <TableCell>Plant Name</TableCell>
-                <TableCell align="right">Soil Type</TableCell>
-                <TableCell align="right">Soil Moistrue</TableCell>
-                <TableCell align="right">Water to be added</TableCell>
-                <TableCell align="right"> </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row) => (
-                <TableRow key={row.pid} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell align="left">{row.pid}</TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.pname}
-                  </TableCell>
-                  <TableCell align="right">{row.stype}</TableCell>
-                  <TableCell align="right">{row.smois}</TableCell>
-                  <TableCell align="right">{row.smois}</TableCell>
-                  <TableCell align="right" onClick={() => onEditTable(row)}>
-                    <IconButton color="secondary" aria-label="add an alarm">
-                      <Icon icon="akar-icons:edit" color="green" width="24" height="24" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer> */}
-
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
@@ -364,20 +441,43 @@ export default function Plant() {
                 <StyledTableCell align="left">Plant Name</StyledTableCell>
                 <StyledTableCell align="right">Soil Type</StyledTableCell>
                 <StyledTableCell align="right">Soil Moistrue</StyledTableCell>
-                <StyledTableCell align="right">Water to be added</StyledTableCell>
+                <StyledTableCell align="right">Recomend Water</StyledTableCell>
+                {/* <StyledTableCell align="right">
+                  How much more water should be added?
+                </StyledTableCell> */}
+                <StyledTableCell align="right">Channel</StyledTableCell>
+                <StyledTableCell align="right">View Prediction</StyledTableCell>
                 <StyledTableCell align="right"> </StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.map((row) => (
-                <StyledTableRow key={row.pid}>
+                <StyledTableRow key={row.pid} onClick={() => fetchmotorval(row)}>
                   <StyledTableCell component="th" scope="row" align="left">
                     {row.pid}
                   </StyledTableCell>
                   <StyledTableCell align="left">{row.pname}</StyledTableCell>
                   <StyledTableCell align="right">{row.stype}</StyledTableCell>
+                  {tomois?.map((item, index) => {
+                    if (item.id === row.channel) {
+                      return (
+                        <StyledTableCell key={index} align="right">
+                          {item.val}
+                        </StyledTableCell>
+                      );
+                    }
+                  })}
                   <StyledTableCell align="right">{row.smois}</StyledTableCell>
-                  <StyledTableCell align="right">{row.smois}</StyledTableCell>
+                  <StyledTableCell align="right">{row.channel}</StyledTableCell>
+                  <StyledTableCell align="right">
+                    <IconButton
+                      color="secondary"
+                      aria-label="add an alarm"
+                      onClick={() => calculation(row)}
+                    >
+                      <Icon icon="fa:eye" color="blue" width="24" height="24" />
+                    </IconButton>
+                  </StyledTableCell>
                   <StyledTableCell align="right" onClick={() => onEditTable(row)}>
                     <IconButton color="secondary" aria-label="add an alarm">
                       <Icon icon="akar-icons:edit" color="green" width="24" height="24" />
