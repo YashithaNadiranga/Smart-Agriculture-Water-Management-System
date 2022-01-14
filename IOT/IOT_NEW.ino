@@ -5,13 +5,13 @@
 DHT dht(D4, DHT11); // Including library for dht
 
 const char *ssid = "Home network";
-const char *password = "Shama@2000";
+const char *password = "";
 
 unsigned long chanelId = 1628835; // Enter Write Channel key from ThingSpeak
 unsigned long chanel2Id = 1631910; // Enter Read Channel key from ThingSpeak - Motor val
 
-const char *rightAPIkey = "XCHF4SLL82NHOYC0"; // Enter Write API key from ThingSpeak
-const char *readAPIkey = "N3ZWQNZJ7V6QAAFP"; // Enter Read API key from ThingSpeak
+const char *rightAPIkey = "XCHF4SLL82NHOYC0QWER"; // Enter Write API key from ThingSpeak
+const char *readAPIkey = "N3ZWQNZJ7V6QAAFPQWER"; // Enter Read API key from ThingSpeak
 
 const int AirValue = 790;   //need to replace this value with Value_1
 const int WaterValue = 300;  //need to replace this value with Value_2
