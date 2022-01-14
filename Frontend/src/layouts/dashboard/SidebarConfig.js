@@ -17,19 +17,19 @@ const sidebarConfig = [
     path: '/dashboard/app',
     icon: getIcon(pieChart2Fill)
   },
-  {
-    title: 'users',
-    path: '/dashboard/user',
-    icon: getIcon(peopleFill)
-  },
+  // {
+  //   title: 'users',
+  //   path: '/dashboard/user',
+  //   icon: getIcon(peopleFill)
+  // },
   {
     title: 'plants',
     path: '/dashboard/plants',
     icon: getIcon('ri:plant-fill')
   },
   {
-    title: 'soil',
-    path: '/dashboard/soil',
+    title: 'Channels',
+    path: '/dashboard/channels',
     icon: getIcon(fileTextFill)
   }
   // {

@@ -61,7 +61,7 @@ export default function DashboardApp() {
   function getWeatherData() {
     axios
       .get(
-        'https://api.openweathermap.org/data/2.5/weather?lat=6.75511453189087&lon=80.05017596178016&' //appid=1cc5ca389e8489194b21dc857f906e89
+        'https://api.openweathermap.org/data/2.5/weather?lat=6.75511453189087&lon=80.05017596178016&appid='
       )
       .then((res) => {
         setWdata(res.data);
@@ -126,14 +126,14 @@ export default function DashboardApp() {
             <AppWaterLevel />
           </Grid>
           <Grid item xs={12} sm={12} md={12} sx={{ mb: 3 }}>
-            DATA
+            DATA Visualization
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
             <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
               <CardActionArea>
                 <CardContent sx={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '16px' }}>Soil Moisture Meter</p>
+                  <p style={{ fontSize: '16px' }}>Air Temperature</p>
                   <iframe
                     style={{
                       border: 'none'
@@ -171,6 +171,7 @@ export default function DashboardApp() {
             <Card sx={{ maxWidth: '100%', border: 'solid 2px green' }}>
               <CardActionArea>
                 <CardContent sx={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '16px' }}>Soil Moisture</p>
                   <iframe
                     style={{
                       border: 'none'
@@ -178,7 +179,7 @@ export default function DashboardApp() {
                     title="myFrame"
                     width="100%"
                     height="260"
-                    src="https://thingspeak.com/channels/1628835/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Soil Moisture&type=line&width=560"
+                    src="https://thingspeak.com/channels/1628835/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=&type=line&width=500"
                   />
                 </CardContent>
               </CardActionArea>
@@ -195,7 +196,7 @@ export default function DashboardApp() {
                     title="myFrame"
                     width="100%"
                     height="260"
-                    src="https://thingspeak.com/channels/1628835/widgets/406788&title=Motor State&width=560"
+                    src="https://thingspeak.com/channels/1631910/widgets/408070&title=Motor State&width=560"
                   />
                 </CardContent>
               </CardActionArea>

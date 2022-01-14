@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Plants from './pages/Plants';
-import Soil from './pages/soil';
+import Channels from './pages/Channels';
 import User from './pages/User copy';
 import NotFound from './pages/Page404';
 
@@ -24,7 +24,7 @@ export default function Router() {
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
         { path: 'plants', element: <Plants /> },
-        { path: 'soil', element: <Soil /> }
+        { path: 'channels', element: <Channels /> }
       ]
     },
     {
