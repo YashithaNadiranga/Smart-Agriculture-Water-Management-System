@@ -20,9 +20,10 @@ class User(db.Model):
 
 class Plant(db.Model):
     pid = db.Column(db.String(30), primary_key = True)
-    pname = db.Column(db.String(30),unique=True, nullable=False)
-    stype = db.Column(db.String(30),unique=True, nullable=False)
-    smois = db.Column(db.String(30),unique=True, nullable=False)
+    pname = db.Column(db.String(30), nullable=False)
+    stype = db.Column(db.String(30), nullable=False)
+    smois = db.Column(db.String(30), nullable=False)
+    channel = db.Column(db.String(30), nullable=False)
 
 db.create_all()
 
@@ -53,8 +54,9 @@ def plant_add():
         pname = request.json.get('pname')
         stype = request.json.get('stype')
         smois = request.json.get('smois')
+        channel = request.json.get('channel')
         
-        pl = Plant(pid = pid , pname = pname, stype = stype, smois = smois)
+        pl = Plant(pid = pid , pname = pname, stype = stype, smois = smois, channel = channel)
         db.session.add(pl)
         db.session.commit() 
         return make_response(jsonify(success= "success"), 200)
@@ -69,11 +71,13 @@ def plant_update():
         pname = request.json.get('pname')
         stype = request.json.get('stype')
         smois = request.json.get('smois')
+        channel = request.json.get('channel')
 
         plant_n = Plant.query.filter_by(pid=pid).first()
         plant_n.pname = pname
         plant_n.stype = stype
         plant_n.smois = smois
+        plant_n.channel = channel
         db.session.commit()
         return make_response(jsonify(success= "success"), 200)
     else:
